@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data & Methods - Netherlands Air Quality Monitoring</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">&#127758; Air<span>Quality</span> NL</a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="results.html">Results</a></li>
+            <li><a href="webgis.html">WebGIS</a></li>
+            <li><a href="data.html" class="active">Data & Methods</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <section>
+            <h2>Data Sources</h2>
+            <p>The project uses open-access satellite and geospatial datasets from European and global programs.</p>
+
+            <div class="data-section">
+                <h3>Air Quality Data</h3>
+                <ul class="dataset-list">
+                    <li>
+                        <span class="name">CAMS Reanalysis</span>
+                        <span class="desc">Copernicus Atmosphere Monitoring Service &mdash; NO&dsub2; at 0.1&deg; resolution</span>
+                    </li>
+                </ul>
+                <h3>Land Cover Data</h3>
+                <ul class="dataset-list">
+                    <li>
+                        <span class="name">ESA WorldCover</span>
+                        <span class="desc">10m annual land cover (2021, 2023) &mdash; 12 classes</span>
+                    </li>
+                </ul>
+                <h3>Population Data</h3>
+                <ul class="dataset-list">
+                    <li>
+                        <span class="name">WorldPop</span>
+                        <span class="desc">Population counts at ~92m resolution</span>
+                    </li>
+                </ul>
+                <h3>Administrative Boundaries</h3>
+                <ul class="dataset-list">
+                    <li>
+                        <span class="name">GADM v4.1</span>
+                        <span class="desc">Netherlands provinces (Level 1) &mdash; 14 provinces</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Processing Methodology</h2>
+
+            <div class="data-section">
+                <h3>Lab 2: NO&dsub2; Concentration Maps</h3>
+                <p>Monthly CAMS NO&dsub2; data for 2023 was downloaded and processed to compute annual average concentrations. The results were classified into 5 EU standard classes:</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Class</th><th>Range (&mu;g/m&sup3;)</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>&le;10</td><td>Low</td></tr>
+                            <tr><td>2</td><td>10 &ndash; 25</td><td>Moderate</td></tr>
+                            <tr><td>3</td><td>25 &ndash; 40</td><td>High</td></tr>
+                            <tr><td>4</td><td>40 &ndash; 50</td><td>Very High</td></tr>
+                            <tr><td>5</td><td>&gt;50</td><td>Extreme</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>The Annual Mean Absolute Change (AMAC) was computed as the difference between 2023 and 2021 annual averages: <strong>AMAC = avg(2023) &minus; avg(2021)</strong>.</p>
+            </div>
+
+            <div class="data-section">
+                <h3>Lab 3: Land Cover Change</h3>
+                <p>ESA WorldCover 10m data for 2021 and 2023 was used to detect built area changes:</p>
+                <ol style="margin-left:1.5rem;line-height:2;">
+                    <li>Extract built area (class 5/7) from both years as binary masks</li>
+                    <li>Compute LCC using: <strong>Change = 2023_mask &times; 10 + 2021_mask</strong></li>
+                    <li>Classify into Stable (0-1), Gain (10), Loss (1), NoData (255)</li>
+                    <li>Apply DEFLATE compression with BigTIFF format</li>
+                </ol>
+            </div>
+
+            <div class="data-section">
+                <h3>Lab 4: Population Exposure &amp; Bivariate Map</h3>
+                <p>Population exposure assessment combines NO&dsub2; concentration data with population distribution:</p>
+                <ol style="margin-left:1.5rem;line-height:2;">
+                    <li>Population density classified into 5 quantile classes</li>
+                    <li>NO&dsub2; concentration classified into 5 EU standard classes</li>
+                    <li>Zonal statistics per province: median population class, max pollution class</li>
+                    <li>Bivariate combination: <strong>Pol_Class &times; 10 + Pop_Class</strong> (range: 11-55)</li>
+                    <li>Dissolve by pollution class to compute population sums per class</li>
+                </ol>
+            </div>
+
+            <div class="data-section">
+                <h3>Lab 5: Website &amp; WebGIS</h3>
+                <p>An interactive website was developed to present all project results. The WebGIS component uses <strong>OpenLayers</strong> with:</p>
+                <ul style="margin-left:1.5rem;line-height:2;">
+                    <li>Three basemaps: OpenStreetMap, CartoDB Positron, Satellite</li>
+                    <li>ScaleLine, FullScreen, MousePosition controls</li>
+                    <li>GeoJSON vector layers for provinces and bivariate classification</li>
+                    <li>Interactive popup with attribute information</li>
+                    <li>Layer visibility toggles and basemap switcher</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Technical Challenges &amp; Solutions</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Large Raster Files</h3>
+                    <p>The LCC raster (37K &times; 27K pixels, 91% NoData) was optimized using BigTIFF with DEFLATE compression, achieving a 106:1 compression ratio (18MB vs 3.8GB uncompressed).</p>
+                </div>
+                <div class="card">
+                    <h3>Data Source Updates</h3>
+                    <p>2023 CAMS data was used instead of 2020 since the newer data is available. GADM administrative boundaries replaced the unavailable GAUL dataset.</p>
+                </div>
+                <div class="card">
+                    <h3>GeoPackage Binary Format</h3>
+                    <p>Converting GPKG geometries to GeoJSON required parsing the GeoPackage binary format (flags byte + envelope + standard WKB) to extract coordinate data for the web map.</p>
+                </div>
+                <div class="card">
+                    <h3>Raster Alignment</h3>
+                    <p>Different spatial resolutions (NO2: 11km, Population: 92m, Land Cover: 10m) required careful resampling and alignment to a common grid for zonal statistics.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Deliverables</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr><th>File</th><th>Format</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Netherlands_average_no2_2023.tif</td><td>GeoTIFF</td><td>Annual average NO&dsub2; concentration</td></tr>
+                        <tr><td>Netherlands_no2_concentration_map_2023.tif</td><td>GeoTIFF</td><td>NO&dsub2; concentration class (EU 5 classes)</td></tr>
+                        <tr><td>Netherlands_no2_2021_2023_AMAC_map.tif</td><td>GeoTIFF</td><td>Annual Mean Absolute Change</td></tr>
+                        <tr><td>Netherlands_LCC_2021_2023.tif</td><td>BigTIFF</td><td>Land Cover Change (18MB compressed)</td></tr>
+                        <tr><td>stable.tif / gain.tif / loss.tif</td><td>GeoTIFF</td><td>LCC binary masks</td></tr>
+                        <tr><td>Netherlands_built_change_mask.tif</td><td>GeoTIFF</td><td>Built area change mask</td></tr>
+                        <tr><td>netherlands_pop_quantile.tif</td><td>GeoTIFF</td><td>Population density quantiles (5 classes)</td></tr>
+                        <tr><td>netherlands_no2_bivariate_base.gpkg</td><td>GeoPackage</td><td>Province bivariate classification</td></tr>
+                        <tr><td>netherlands_no2_dissolved.gpkg</td><td>GeoPackage</td><td>Dissolved zones for pie chart</td></tr>
+                        <tr><td>no2_population_pie_chart.png</td><td>PNG</td><td>Population exposure chart</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p><strong>GIS Lab Project</strong> &mdash; Politecnico di Milano &mdash; A.A. 2025/26</p>
+        <p>Data: CAMS, ESA WorldCover, WorldPop, GADM &mdash; Built with OpenLayers</p>
+    </footer>
+</body>
+</html>
