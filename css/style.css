@@ -1,0 +1,432 @@
+/* ===== GIS Lab 5 - Website Styles ===== */
+:root {
+    --primary: #2c6e49;
+    --primary-dark: #1e4d32;
+    --secondary: #4c956c;
+    --accent: #f8c630;
+    --dark: #2d3436;
+    --gray: #636e72;
+    --light-gray: #dfe6e9;
+    --bg: #f8f9fa;
+    --white: #ffffff;
+    --shadow: 0 2px 15px rgba(0,0,0,0.08);
+    --radius: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.7;
+    color: var(--dark);
+    background: var(--bg);
+}
+
+/* Navigation */
+nav {
+    background: var(--primary-dark);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+nav .logo {
+    color: var(--white);
+    font-size: 1.3rem;
+    font-weight: 700;
+    padding: 1rem 0;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+nav .logo span { color: var(--accent); }
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 0.25rem;
+}
+
+nav ul li a {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    padding: 1rem 1.25rem;
+    display: block;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    border-radius: 4px 4px 0 0;
+}
+
+nav ul li a:hover,
+nav ul li a.active:hover {
+    color: var(--white);
+    background: rgba(255,255,255,0.12);
+}
+
+nav ul li a.active {
+    background: var(--white);
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+nav ul li a.active:hover {
+    background: var(--white);
+    color: var(--primary-dark);
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--secondary) 100%);
+    color: var(--white);
+    padding: 5rem 2rem;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto;
+    opacity: 0.9;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Sections */
+section { padding: 3rem 0; }
+
+section h2 {
+    font-size: 2rem;
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--accent);
+}
+
+section h3 {
+    font-size: 1.3rem;
+    color: var(--primary);
+    margin: 1.5rem 0 0.75rem;
+}
+
+/* Cards */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+}
+
+.card:hover { transform: translateY(-3px); }
+
+.card h3 { margin-top: 0; color: var(--primary-dark); }
+.card p { color: var(--gray); font-size: 0.95rem; }
+.card .icon { font-size: 2rem; margin-bottom: 0.75rem; }
+
+/* Results Grid */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
+.result-item {
+    background: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.result-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.result-item .caption {
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+.result-item .caption strong {
+    color: var(--dark);
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 1rem;
+}
+
+/* Tables */
+.table-wrapper {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+thead {
+    background: var(--primary);
+    color: var(--white);
+}
+
+th, td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+tbody tr:nth-child(even) {
+    background: #f1f8f4;
+}
+
+tbody tr:hover {
+    background: #e6f0ea;
+}
+
+/* WebGIS Page */
+.webgis-page {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px);
+}
+
+#map {
+    flex: 1;
+    width: 100%;
+    min-height: 600px;
+}
+
+.map-toolbar {
+    background: var(--white);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--light-gray);
+    font-size: 0.85rem;
+    z-index: 10;
+}
+
+.map-toolbar label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.map-toolbar input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.map-toolbar select {
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--light-gray);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    background: var(--white);
+}
+
+.map-toolbar .separator {
+    width: 1px;
+    height: 24px;
+    background: var(--light-gray);
+}
+
+/* Legend Panel */
+.legend-panel {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    max-width: 260px;
+    font-size: 0.85rem;
+}
+
+.legend-panel h4 {
+    margin-bottom: 0.5rem;
+    color: var(--primary-dark);
+    font-size: 0.9rem;
+    border-bottom: 2px solid var(--light-gray);
+    padding-bottom: 0.35rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0;
+    font-size: 0.8rem;
+}
+
+.legend-color {
+    width: 22px;
+    height: 14px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Data page */
+.data-section {
+    margin-bottom: 2rem;
+}
+
+.dataset-list {
+    list-style: none;
+}
+
+.dataset-list li {
+    padding: 0.75rem 1rem;
+    background: var(--white);
+    margin-bottom: 0.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dataset-list li .name {
+    font-weight: 600;
+    color: var(--primary-dark);
+    white-space: nowrap;
+}
+
+.dataset-list li .desc {
+    color: var(--gray);
+    font-size: 0.85rem;
+    text-align: right;
+}
+
+/* Footer */
+footer {
+    background: var(--dark);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.85rem;
+    margin-top: 3rem;
+}
+
+footer strong { color: var(--white); }
+
+/* Responsive */
+@media (max-width: 768px) {
+    nav { flex-direction: column; padding: 0 1rem; }
+    nav ul { width: 100%; }
+    nav ul li a { padding: 0.75rem 1rem; text-align: center; }
+    .hero h1 { font-size: 2rem; }
+    .hero { padding: 3rem 1rem; }
+    .results-grid { grid-template-columns: 1fr; }
+    .map-toolbar { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .webgis-page { height: auto; }
+}
+
+/* Utility */
+.text-center { text-align: center; }
+.mt-2 { margin-top: 1rem; }
+.mb-2 { margin-bottom: 1rem; }
+.flex { display: flex; gap: 1rem; flex-wrap: wrap; }
+.flex-center { align-items: center; justify-content: center; }
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Bivariate legend colors */
+.biv-11 { background: #e8e8e8; }
+.biv-12 { background: #b0d0b0; }
+.biv-13 { background: #73b873; }
+.biv-14 { background: #2d9e2d; }
+.biv-21 { background: #f0b0b0; }
+.biv-22 { background: #c8a0a0; }
+.biv-23 { background: #9a8a6a; }
+.biv-24 { background: #607040; }
+.biv-31 { background: #e88888; }
+.biv-32 { background: #c07050; }
+.biv-33 { background: #a05830; }
+
+/* Bivariate legend grid */
+.biv-legend {
+    display: inline-grid;
+    grid-template-columns: repeat(4, 36px);
+    grid-template-rows: repeat(3, 36px);
+    gap: 2px;
+    margin: 0.5rem 0;
+}
+
+.biv-legend .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: rgba(0,0,0,0.6);
+    border-radius: 2px;
+}
+
+/* Tag for data source */
+.tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--light-gray);
+    color: var(--gray);
+}
+
+.tag.primary { background: rgba(44,110,73,0.15); color: var(--primary); }
+.tag.cams { background: rgba(248,198,48,0.2); color: #8a7000; }
+.tag.esa { background: rgba(44,110,73,0.15); color: var(--primary); }
