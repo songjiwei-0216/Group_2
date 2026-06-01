@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - Netherlands Air Quality Monitoring</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .pollutant-tabs { display: flex; gap: 0; margin: 1.5rem 0; border-bottom: 3px solid var(--primary); }
+        .pollutant-tabs .tab {
+            padding: 0.6rem 1.5rem; cursor: default; font-weight: 600; font-size: 0.95rem;
+            border-radius: 6px 6px 0 0; background: var(--light-gray); color: var(--gray);
+            border: none; margin-right: 3px;
+        }
+        .pollutant-tabs .tab.active { background: var(--primary); color: white; }
+        .pollutant-tabs .tab .badge { font-size: 0.7rem; opacity: 0.7; font-weight: 400; }
+        .pollutant-panel { display: none; }
+        .pollutant-panel.active { display: block; }
+        .compact-table { font-size: 0.85rem; }
+        .compact-table td, .compact-table th { padding: 0.5rem 0.75rem; }
+        .placeholder-img { opacity: 0.35; filter: grayscale(1); }
+        .data-wait { color: #e65100; font-size: 0.85rem; font-style: italic; }
+        .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1rem 0; }
+        .summary-card { background: var(--white); border-radius: var(--radius); padding: 1rem; box-shadow: var(--shadow); text-align: center; }
+        .summary-card .value { font-size: 1.5rem; font-weight: 800; color: var(--primary-dark); }
+        .summary-card .label { font-size: 0.8rem; color: var(--gray); margin-top: 0.2rem; }
+        .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 768px) { .mini-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">&#127758; Air<span>Quality</span> NL</a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="results.html" class="active">Results</a></li>
+            <li><a href="webgis.html">WebGIS</a></li>
+            <li><a href="data.html">Data & Methods</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <section>
+            <h2>Lab Results</h2>
+            <p>Overview of all GIS lab results: pollutant concentration maps, population exposure, land cover change analysis, and correlation statistics.</p>
+        </section>
+
+        <!-- ===== POLLUTANT OVERVIEW ===== -->
+        <section>
+            <h2>Pollutant Concentration &amp; Population Exposure</h2>
+
+            <div class="pollutant-tabs">
+                <button class="tab active" onclick="switchPollutantTab('no2')">NO&#8322; <span class="badge">&#9989; ready</span></button>
+                <button class="tab" onclick="switchPollutantTab('pm2p5')">PM2.5 <span class="badge">&#9203; data soon</span></button>
+                <button class="tab" onclick="switchPollutantTab('pm10')">PM10 <span class="badge">&#9203; data soon</span></button>
+            </div>
+
+            <!-- NO2 Panel -->
+            <div id="panel-no2" class="pollutant-panel active">
+                <div class="mini-grid">
+                    <div class="result-item">
+                        <img src="images/no2_population_pie_chart.png" alt="NO2 Pie Chart" style="max-height:350px;object-fit:contain;background:#fff;">
+                        <div class="caption"><strong>Population Exposure to NO&#8322;</strong> 90.2% lives in Class 2 (10-25 &mu;g/m&sup3;)</div>
+                    </div>
+                    <div class="result-item">
+                        <img src="images/bivariate_map.png" alt="NO2 Bivariate" style="max-height:350px;object-fit:contain;background:#fff;">
+                        <div class="caption"><strong>NO&#8322; &#215; Population Bivariate Map</strong> 5&#215;5 classification by province</div>
+                    </div>
+                </div>
+
+                <div class="result-item" style="margin-top:1rem;">
+                    <img src="images/lcc_amac_bar_chart.png" alt="NO2 LCC Chart" style="width:100%;max-width:700px;display:block;margin:0 auto;background:#fff;">
+                    <div class="caption"><strong>NO&#8322; Change by LCC Type</strong> Min / Mean / Max per transition class (Built Area)</div>
+                </div>
+
+                <h3>NO&#8322; by Province</h3>
+                <div class="table-wrapper compact-table">
+                    <table>
+                        <thead><tr><th>Province</th><th>Pop Class</th><th>Pol Class</th><th>Bivariate</th></tr></thead>
+                        <tbody id="no2-bivariate-table-body"><tr><td colspan="4" style="text-align:center;">Loading...</td></tr></tbody>
+                    </table>
+                </div>
+
+                <h3>Exposure Summary</h3>
+                <div class="table-wrapper compact-table">
+                    <table>
+                        <thead><tr><th>EU Class</th><th>Population</th><th>%</th></tr></thead>
+                        <tbody id="no2-exposure-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PM2.5 Panel -->
+            <div id="panel-pm2p5" class="pollutant-panel">
+                <div class="mini-grid">
+                    <div class="result-item">
+                        <img src="images/no2_population_pie_chart.png" alt="PM2.5" class="placeholder-img" style="max-height:350px;object-fit:contain;background:#f9f9f9;">
+                        <div class="caption"><strong>PM2.5 Population Exposure</strong> <span class="data-wait">&#9203; Replace images/pm2p5_population_pie_chart.png</span></div>
+                    </div>
+                    <div class="result-item">
+                        <img src="images/bivariate_map.png" alt="PM2.5 Biv" class="placeholder-img" style="max-height:350px;object-fit:contain;background:#f9f9f9;">
+                        <div class="caption"><strong>PM2.5 &#215; Population Bivariate</strong> <span class="data-wait">&#9203; Replace images/pm2p5_bivariate_map.png</span></div>
+                    </div>
+                </div>
+                <div class="result-item" style="margin-top:1rem;">
+                    <img src="images/lcc_amac_bar_chart.png" alt="PM2.5 LCC" class="placeholder-img" style="width:100%;max-width:700px;display:block;margin:0 auto;background:#f9f9f9;">
+                    <div class="caption"><strong>PM2.5 Change by LCC Type</strong> <span class="data-wait">&#9203; Replace images/pm2p5_lcc_bar_chart.png</span></div>
+                </div>
+            </div>
+
+            <!-- PM10 Panel -->
+            <div id="panel-pm10" class="pollutant-panel">
+                <div class="mini-grid">
+                    <div class="result-item">
+                        <img src="images/no2_population_pie_chart.png" alt="PM10" class="placeholder-img" style="max-height:350px;object-fit:contain;background:#f9f9f9;">
+                        <div class="caption"><strong>PM10 Population Exposure</strong> <span class="data-wait">&#9203; Replace images/pm10_population_pie_chart.png</span></div>
+                    </div>
+                    <div class="result-item">
+                        <img src="images/bivariate_map.png" alt="PM10 Biv" class="placeholder-img" style="max-height:350px;object-fit:contain;background:#f9f9f9;">
+                        <div class="caption"><strong>PM10 &#215; Population Bivariate</strong> <span class="data-wait">&#9203; Replace images/pm10_bivariate_map.png</span></div>
+                    </div>
+                </div>
+                <div class="result-item" style="margin-top:1rem;">
+                    <img src="images/lcc_amac_bar_chart.png" alt="PM10 LCC" class="placeholder-img" style="width:100%;max-width:700px;display:block;margin:0 auto;background:#f9f9f9;">
+                    <div class="caption"><strong>PM10 Change by LCC Type</strong> <span class="data-wait">&#9203; Replace images/pm10_lcc_bar_chart.png</span></div>
+                </div>
+            </div>
+                    </div>
+                </div>
+                <p class="data-wait" style="text-align:center;padding:1rem;">Data will appear once teammates provide PM10 GeoJSON files</p>
+            </div>
+        </section>
+
+        <!-- ===== LCC ===== -->
+        <section style="border-top:3px solid var(--accent);padding-top:2rem;">
+            <h2>Land Cover Change (2021&#8594;2023)</h2>
+            <p>Built area change detection using ESA WorldCover 10m data.</p>
+
+            <div class="summary-cards">
+                <div class="summary-card"><div class="value">96.99%</div><div class="label">Stability (Persistence)</div></div>
+                <div class="summary-card"><div class="value">61.76%</div><div class="label">Primary Gain: Crops &#8594; Built</div></div>
+                <div class="summary-card"><div class="value">60.98%</div><div class="label">Primary Loss: Built &#8594; Crops</div></div>
+            </div>
+
+            <div class="result-item">
+                <img src="images/verification_change_mask.png" alt="Change Mask" style="max-height:300px;object-fit:contain;background:#fff;">
+                <div class="caption"><strong>Built Area Change Mask</strong> (2021 vs 2023 ESA WorldCover)</div>
+            </div>
+
+            <h3>Transition Contingency Table</h3>
+            <div class="table-wrapper compact-table">
+                <table>
+                    <thead><tr><th>Indicator</th><th>Value (%)</th><th>Category</th></tr></thead>
+                    <tbody>
+                        <tr><td>Stability (Persistence)</td><td><strong>96.99%</strong></td><td>N/A (Baseline)</td></tr>
+                        <tr><td>Primary Source of Gain</td><td><strong>61.76%</strong></td><td>Crops &#8594; Built Area (705)</td></tr>
+                        <tr><td>2nd Source of Gain</td><td><strong>10.25%</strong></td><td>Shrub &#8594; Built Area (702)</td></tr>
+                        <tr><td>3rd Source of Gain</td><td><strong>9.52%</strong></td><td>Water &#8594; Built Area (701)</td></tr>
+                        <tr><td>Primary Destination of Loss</td><td><strong>60.98%</strong></td><td>Built Area &#8594; Crops (507)</td></tr>
+                        <tr><td>2nd Destination of Loss</td><td><strong>21.12%</strong></td><td>Built Area &#8594; Trees (207)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Zonal Statistics Detail</h3>
+            <div class="table-wrapper compact-table">
+                <table>
+                    <thead><tr><th>LCC Code</th><th>Transition</th><th>Pixels</th><th>Mean (&mu;g/m&sup3;)</th><th>Min</th><th>Max</th></tr></thead>
+                    <tbody id="lcc-zonal-table-body"><tr><td colspan="6" style="text-align:center;">Loading...</td></tr></tbody>
+                </table>
+            </div>
+            <p style="font-size:0.8rem;color:#999;">LCC = 2023_class &#215; 100 + 2021_class. All AMAC values negative = NO&#8322; decreased across Netherlands 2021&#8594;2023.</p>
+        </section>
+    </div>
+
+    <footer>
+        <p><strong>GIS Lab Project</strong> &mdash; Politecnico di Milano &mdash; A.A. 2025/26</p>
+        <p>Data: CAMS, ESA WorldCover, WorldPop, GADM &mdash; Built with OpenLayers</p>
+    </footer>
+
+    <script src="js/results-data.js"></script>
+    <script>
+    // Pollutant tab switcher
+    function switchPollutantTab(poll) {
+        document.querySelectorAll('.pollutant-tabs .tab').forEach(function(t){ t.classList.remove('active'); });
+        document.querySelectorAll('.pollutant-panel').forEach(function(p){ p.classList.remove('active'); });
+        var tabBtns = document.querySelectorAll('.pollutant-tabs .tab');
+        if (poll === 'no2') tabBtns[0].classList.add('active');
+        else if (poll === 'pm2p5') tabBtns[1].classList.add('active');
+        else if (poll === 'pm10') tabBtns[2].classList.add('active');
+        document.getElementById('panel-' + poll).classList.add('active');
+    }
+
+    // NO2 tables
+    (function() {
+        var tb = document.getElementById('no2-bivariate-table-body');
+        if (tb && TABLE_BIVARIATE.length > 0) {
+            tb.innerHTML = '';
+            TABLE_BIVARIATE.forEach(function(p) {
+                tb.innerHTML += '<tr><td>' + (p.NAME_1||'') + '</td><td>' + (p.pop_class_median||'') + '</td><td>' + (p.pol_class_max||'') + '</td><td><strong>' + (p.bivariate||'') + '</strong></td></tr>';
+            });
+        }
+        var te = document.getElementById('no2-exposure-table-body');
+        if (te && TABLE_CHART.length > 0) {
+            te.innerHTML = '';
+            TABLE_CHART.sort(function(a,b){return a.pol_class_max-b.pol_class_max;}).forEach(function(p) {
+                te.innerHTML += '<tr><td>Class ' + (p.pol_class_max||'') + ' (' + (p.pol_class_max===1?'&le;10':'10-25') + ' &mu;g/m&sup3;)</td><td>' + (parseFloat(p.pop_sum)||0).toLocaleString() + '</td><td>' + (parseFloat(p.pop_pct)||0) + '%</td></tr>';
+            });
+        }
+    })();
+
+    // LCC zonal stats table
+    (function() {
+        var tb = document.getElementById('lcc-zonal-table-body');
+        if (tb && typeof LCC_ZONAL_STATS !== 'undefined' && LCC_ZONAL_STATS.length > 0) {
+            tb.innerHTML = '';
+            LCC_ZONAL_STATS.sort(function(a,b){return a.code-b.code;}).forEach(function(d) {
+                tb.innerHTML += '<tr><td>' + d.code + '</td><td>' + d.transition + '</td><td>' + d.count + '</td><td>' + d.mean.toFixed(4) + '</td><td>' + d.min.toFixed(4) + '</td><td>' + d.max.toFixed(4) + '</td></tr>';
+            });
+        }
+    })();
+    </script>
+</body>
+</html>
