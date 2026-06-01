@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGIS - Netherlands Air Quality Monitoring</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.5.2/ol.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { margin: 0; overflow: hidden; }
+        .webgis-page { display: flex; flex-direction: column; height: 100vh; position: relative; }
+        #map { flex: 1; width: 100%; }
+        .ol-popup { font-size: 13px; }
+        .ol-popup table td { padding: 2px 8px; }
+        .custom-mouse-position { font-size: 12px; font-family: monospace; padding: 4px 8px; background: rgba(255,255,255,0.9); border-radius: 4px; }
+        #legend-panel {
+            position: absolute; bottom: 40px; right: 10px; z-index: 100;
+            background: white; border-radius: 8px; padding: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15); max-width: 240px; font-size: 13px;
+        }
+        #legend-panel h4 { margin: 0 0 6px 0; color: #1e4d32; border-bottom: 2px solid #dfe6e9; padding-bottom: 4px; font-size: 14px; }
+        .legend-section { margin-bottom: 10px; }
+        .legend-section:last-child { margin-bottom: 0; }
+        .legend-section h5 { margin: 0 0 4px 0; font-size: 12px; color: #636e72; }
+    </style>
+</head>
+<body>
+    <div class="webgis-page">
+        <nav style="flex-shrink:0;">
+            <a href="index.html" class="logo">&#127758; Air<span>Quality</span> NL</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="results.html">Results</a></li>
+                <li><a href="webgis.html" class="active">WebGIS</a></li>
+                <li><a href="data.html">Data & Methods</a></li>
+            </ul>
+        </nav>
+
+        <div class="map-toolbar">
+            <label>Pollutant:
+                <select id="pollutant-select" onchange="switchPollutant(this.value)">
+                    <option value="no2">NO&#8322;</option>
+                    <option value="pm2p5">PM2.5</option>
+                    <option value="pm10">PM10</option>
+                </select>
+            </label>
+
+            <label>Basemap:
+                <select id="basemap-select" onchange="setBaseLayer(this.value)">
+                    <option value="OpenStreetMap">OpenStreetMap</option>
+                    <option value="CartoDB Positron">CartoDB Positron</option>
+                    <option value="Satellite">Satellite</option>
+                </select>
+            </label>
+
+            <div class="separator"></div>
+
+            <label><input type="checkbox" checked onchange="toggleLayer('Bivariate', this.checked)"> Bivariate</label>
+            <label><input type="checkbox" checked onchange="toggleLayer('Provinces', this.checked)"> Provinces</label>
+            <label><input type="checkbox" checked onchange="toggleLayer('Dissolved Zones', this.checked)"> Zones</label>
+
+            <div class="separator"></div>
+            <span style="color:#636e72;font-size:13px;">&#9432; Click for details</span>
+        </div>
+
+        <div id="map"></div>
+
+        <div id="legend-panel">
+            <h4>Map Legend</h4>
+            <div id="legend-dynamic-content">
+                <div class="legend-section">
+                    <h5 id="legend-pollutant-name">NO&#8322;-Population Bivariate</h5>
+                    <div id="biv-legend-content"></div>
+                </div>
+                <div class="legend-section">
+                    <h5>Province Boundaries</h5>
+                    <div class="legend-item"><span class="legend-color" style="background:rgba(44,110,73,0.08);border:1.5px solid #2d3436;"></span> Province outline</div>
+                </div>
+                <div class="legend-section">
+                    <h5 id="legend-zone-name">NO&#8322; Dissolved Zones</h5>
+                    <div id="pol-legend-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.5.2/dist/ol.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/webgis.js"></script>
+</body>
+</html>
